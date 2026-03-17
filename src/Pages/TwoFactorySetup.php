@@ -99,7 +99,7 @@ class TwoFactorySetup extends Page implements HasForms
                     ->options(function () {
                         $forceSetup = FilamentMulti2faPlugin::get()->getForceSetup2fa();
 
-                        return collect(TwoFactorAuthType::cases())
+                        return collect(TwoFactorAuthType::enabledCases())
                             ->filter(function ($type) use ($forceSetup) {
                                 if ($type === TwoFactorAuthType::None) {
                                     return ! $forceSetup; // Only show None when force setup is off
@@ -113,12 +113,12 @@ class TwoFactorySetup extends Page implements HasForms
                             ->toArray();
                     })
                     ->colors(
-                        fn () => collect(TwoFactorAuthType::cases())
+                        fn () => collect(TwoFactorAuthType::enabledCases())
                             ->mapWithKeys(fn ($type) => [$type->value => $type->getColor()])
                             ->toArray()
                     )
                     ->icons(
-                        fn () => collect(TwoFactorAuthType::cases())
+                        fn () => collect(TwoFactorAuthType::enabledCases())
                             ->mapWithKeys(fn ($type) => [$type->value => $type->getIcon()])
                             ->toArray()
                     )
@@ -137,8 +137,13 @@ class TwoFactorySetup extends Page implements HasForms
                     ->rule(function (?string $state) {
                         $forceSetup = FilamentMulti2faPlugin::get()->getForceSetup2fa();
                         $currentValue = $this->user->two_factor_type?->value;
+                        $enabledValues = array_map(fn ($t) => $t->value, TwoFactorAuthType::enabledCases());
 
-                        return function (string $attribute, mixed $value, Closure $fail) use ($state, $forceSetup, $currentValue) {
+                        return function (string $attribute, mixed $value, Closure $fail) use ($state, $forceSetup, $currentValue, $enabledValues) {
+                            if ($state !== null && ! in_array($state, $enabledValues)) {
+                                $fail(trans('filament-multi-2fa::filament-multi-2fa.invalid_2fa_type'));
+                            }
+
                             if ($state === TwoFactorAuthType::None->value && $forceSetup) {
                                 $fail(trans('filament-multi-2fa::filament-multi-2fa.must_setup_2fa'));
                             }

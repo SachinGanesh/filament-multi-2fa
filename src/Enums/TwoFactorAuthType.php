@@ -17,6 +17,30 @@ enum TwoFactorAuthType: string implements HasColor, HasIcon, HasLabel
         return array_column(self::cases(), 'value');
     }
 
+    /**
+     * Returns only the cases that are enabled via the `enabled_2fa_types` config key.
+     * Falls back to all cases when the config key is not set.
+     * Accepts either enum instances or string values in the config array.
+     */
+    public static function enabledCases(): array
+    {
+        $configuredTypes = config('filament-multi-2fa.enabled_2fa_types');
+
+        if ($configuredTypes === null) {
+            return self::cases();
+        }
+
+        $enabledValues = array_map(
+            fn ($type) => $type instanceof self ? $type->value : $type,
+            $configuredTypes
+        );
+
+        return array_values(array_filter(
+            self::cases(),
+            fn ($case) => in_array($case->value, $enabledValues)
+        ));
+    }
+
     public function getLabel(): ?string
     {
         return trans('filament-multi-2fa::filament-multi-2fa.' . str($this->name)->snake()->lower()->toString());
