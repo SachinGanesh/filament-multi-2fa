@@ -14,6 +14,7 @@ return [
     'two_factor_setup_intro2' => 'Choose how you would like to verify your account.',
     'verified_before' => 'You have already verified your account with this method before.',
     'must_setup_2fa' => 'You must setup 2FA.',
+    'invalid_2fa_type' => 'The selected 2FA type is not available.',
     'two_factor_type' => 'Select Two Factor Authentication Type',
     'otp' => 'OTP',
     'wrong_otp' => 'Wrong OTP',

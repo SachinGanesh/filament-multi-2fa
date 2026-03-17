@@ -58,6 +58,36 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Enabled Two-Factor Authentication Types
+    |--------------------------------------------------------------------------
+    |
+    | Specify which 2FA methods are available for users to choose from.
+    | Remove a type from the array to prevent users from selecting it.
+    |
+    | Supported types:
+    |   - TwoFactorAuthType::Email  – one-time password sent via e-mail
+    |   - TwoFactorAuthType::Totp   – authenticator app (time-based OTP)
+    |   - TwoFactorAuthType::None   – allow users to disable 2FA
+    |
+    | Examples:
+    |   Email only:        [TwoFactorAuthType::Email, TwoFactorAuthType::None]
+    |   TOTP only:         [TwoFactorAuthType::Totp,  TwoFactorAuthType::None]
+    |   Both (default):   [TwoFactorAuthType::Email, TwoFactorAuthType::Totp, TwoFactorAuthType::None]
+    |
+    | Note: TwoFactorAuthType::None allows users to opt out of 2FA. When
+    | `forceSetup2fa` is enabled on the plugin, None is hidden regardless
+    | of this setting.
+    |
+    */
+
+    'enabled_2fa_types' => [
+        \MixCode\FilamentMulti2fa\Enums\TwoFactorAuthType::Email,
+        \MixCode\FilamentMulti2fa\Enums\TwoFactorAuthType::Totp,
+        \MixCode\FilamentMulti2fa\Enums\TwoFactorAuthType::None,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | OTP Settings
     |--------------------------------------------------------------------------
     |
