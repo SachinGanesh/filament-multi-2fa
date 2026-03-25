@@ -127,7 +127,8 @@ class OTPVerify extends Page implements HasForms
                 Radio::make('trust_device')
                     ->label(trans('filament-multi-2fa::filament-multi-2fa.trust_device'))
                     ->boolean()
-                    ->required(),
+                    ->required()
+                    ->hidden(fn () => FilamentMulti2faPlugin::get()->getRequireTwoFactorOnEveryLogin()),
             ])
             ->statePath('data');
     }
@@ -203,6 +204,10 @@ class OTPVerify extends Page implements HasForms
 
     protected function shouldTrustDevice(): bool
     {
+        if (FilamentMulti2faPlugin::get()->getRequireTwoFactorOnEveryLogin()) {
+            return false;
+        }
+
         return ($this->data['trust_device'] ?? false) && $this->user->two_factor_type->value !== TwoFactorAuthType::None->value;
     }
 

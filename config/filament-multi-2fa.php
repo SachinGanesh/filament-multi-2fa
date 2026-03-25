@@ -124,4 +124,20 @@ return [
     // Duration (in minutes) to cache trusted device checks to reduce DB queries
     'trust_device_check_cache_lifespan' => 60 * 24 * 30, // 30 days
 
+    /*
+    |--------------------------------------------------------------------------
+    | Require Two-Factor Authentication on Every Login
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, users will be prompted for 2FA verification on every login,
+    | even if their device was previously trusted. This ensures maximum security
+    | by requiring 2FA each time a user authenticates.
+    |
+    | This can also be toggled per-panel via the plugin method:
+    |   FilamentMulti2faPlugin::make()->requireTwoFactorOnEveryLogin()
+    |
+    */
+
+    'require_2fa_on_every_login' => false,
+
 ];
