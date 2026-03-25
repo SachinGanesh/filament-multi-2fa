@@ -15,6 +15,8 @@ class FilamentMulti2faPlugin implements Plugin
 {
     protected bool $isForcedToSetup = false;
 
+    protected bool $requireTwoFactorOnEveryLogin = false;
+
     public function getId(): string
     {
         return 'filament-multi-2fa';
@@ -56,6 +58,19 @@ class FilamentMulti2faPlugin implements Plugin
     public function getForceSetup2fa(): bool
     {
         return $this->isForcedToSetup;
+    }
+
+    public function requireTwoFactorOnEveryLogin(bool $state = true): static
+    {
+        $this->requireTwoFactorOnEveryLogin = $state;
+
+        return $this;
+    }
+
+    public function getRequireTwoFactorOnEveryLogin(): bool
+    {
+        return $this->requireTwoFactorOnEveryLogin
+            || config('filament-multi-2fa.require_2fa_on_every_login', false);
     }
 
     public function redirectAfterVerifyUrl(): string

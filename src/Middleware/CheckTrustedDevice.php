@@ -38,7 +38,9 @@ class CheckTrustedDevice
         }
 
         if (($is2FAForced || $requires2FA) && $user->hasSetupTwoFactor()) {
-            $trusted = $this->checkTrusted($request, $trustDeviceModel, $user);
+            $requireEveryLogin = FilamentMulti2faPlugin::get()->getRequireTwoFactorOnEveryLogin();
+
+            $trusted = $requireEveryLogin ? false : $this->checkTrusted($request, $trustDeviceModel, $user);
             $otpSessionConfirmed = $user->isOtpPassed();
 
             if (! $trusted && ! $otpSessionConfirmed) {
